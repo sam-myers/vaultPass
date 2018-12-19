@@ -20,43 +20,48 @@ function mainLoaded() {
   })
 
   chrome.storage.local.get(['vaultToken'], function (result) {
-    if (result.vaultToken) {
-      vaultToken = result.vaultToken
-    } else {
-      console.error('No Vault-Token information available\nPlease use the options page to login')
+    if (!result.vaultToken || result.vaultToken.length === 0) {
+      let message = 'No Vault-Token information available\nPlease use the options page to login'
+      var notify = document.getElementById('notify')
+      notify.innerText = message
+      notify.style = 'color: red;'
+      console.error(message)
+      return
     }
-  })
-  chrome.storage.sync.get(['vaultAddress'], function (result) {
-    vaultServerAdress = result.vaultAddress
-  })
 
-  chrome.storage.sync.get(['secrets'], function (result) {
-    secretList = result.secrets
-    if (!secretList) {
-      secretList = []
-    }
-    resultList.textContent = ''
+    vaultToken = result.vaultToken
+    chrome.storage.sync.get(['vaultAddress'], function (result) {
+      vaultServerAdress = result.vaultAddress
 
-    secretList.forEach(secret => {
-      jQuery.ajax({
-        type: 'LIST',
-        url: vaultServerAdress + '/v1/secret/metadata/vaultPass/' + secret,
-        headers: { 'X-Vault-Token': vaultToken },
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function (data) {
-          data.data.keys.forEach(element => {
-            var pattern = new RegExp(element)
-            var patternMatches = pattern.test(currentUrl)
-            if (patternMatches) {
-              getCredentials(vaultServerAdress + '/v1/secret/data/vaultPass/' + secret + element).then((credentials) =>
-                addCredentials(credentials.data.data, element, resultList))
+      chrome.storage.sync.get(['secrets'], function (result) {
+        secretList = result.secrets
+        if (!secretList) {
+          secretList = []
+        }
+        resultList.textContent = ''
+
+        secretList.forEach(secret => {
+          jQuery.ajax({
+            type: 'LIST',
+            url: vaultServerAdress + '/v1/secret/metadata/vaultPass/' + secret,
+            headers: { 'X-Vault-Token': vaultToken },
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (data) {
+              data.data.keys.forEach(element => {
+                var pattern = new RegExp(element)
+                var patternMatches = pattern.test(currentUrl)
+                if (patternMatches) {
+                  getCredentials(vaultServerAdress + '/v1/secret/data/vaultPass/' + secret + element).then((credentials) =>
+                    addCredentials(credentials.data.data, element, resultList))
+                }
+              })
+            },
+            error: function (data) {
+              console.error('ERROR accessing ' + secret + ': ' + JSON.stringify(data))
             }
           })
-        },
-        error: function (data) {
-          console.error('ERROR accessing ' + secret + ': ' + JSON.stringify(data))
-        }
+        })
       })
     })
   })
