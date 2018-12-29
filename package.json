@@ -1,0 +1,19 @@
+{
+  "name": "vault-chrome-extension",
+  "version": "1.1.0",
+  "description": "This extension will access specified Vault server and authenticate",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeichenanonym/vault-chrome-extension.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zeichenanonym/vault-chrome-extension/issues"
+  },
+  "homepage": "https://github.com/zeichenanonym/vault-chrome-extension#readme"
+}
