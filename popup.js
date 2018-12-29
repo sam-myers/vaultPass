@@ -5,40 +5,40 @@
         "asyncArrow": "always"
     }], */
 
-var vaultServerAdress, vaultToken, secretList, currentUrl
+var vaultServerAdress, vaultToken, secretList, currentUrl;
 
 function mainLoaded() {
-  var resultList = document.getElementById('resultList')
+  var resultList = document.getElementById('resultList');
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     for (let tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
-      var tab = tabs[tabIndex]
+      var tab = tabs[tabIndex];
       if (tab.url) {
-        currentUrl = tab.url
+        currentUrl = tab.url;
       }
     }
-  })
+  });
 
   chrome.storage.local.get(['vaultToken'], function (result) {
     if (!result.vaultToken || result.vaultToken.length === 0) {
-      let message = 'No Vault-Token information available\nPlease use the options page to login'
-      var notify = document.getElementById('notify')
-      notify.innerText = message
-      notify.style = 'color: red;'
-      console.error(message)
-      return
+      let message = 'No Vault-Token information available\nPlease use the options page to login';
+      var notify = document.getElementById('notify');
+      notify.innerText = message;
+      notify.style = 'color: red;';
+      console.error(message);
+      return;
     }
 
-    vaultToken = result.vaultToken
+    vaultToken = result.vaultToken;
     chrome.storage.sync.get(['vaultAddress'], function (result) {
-      vaultServerAdress = result.vaultAddress
+      vaultServerAdress = result.vaultAddress;
 
       chrome.storage.sync.get(['secrets'], function (result) {
-        secretList = result.secrets
+        secretList = result.secrets;
         if (!secretList) {
-          secretList = []
+          secretList = [];
         }
-        resultList.textContent = ''
+        resultList.textContent = '';
 
         secretList.forEach(secret => {
           jQuery.ajax({
@@ -49,36 +49,36 @@ function mainLoaded() {
             dataType: 'json',
             success: function (data) {
               data.data.keys.forEach(element => {
-                var pattern = new RegExp(element)
-                var patternMatches = pattern.test(currentUrl)
+                var pattern = new RegExp(element);
+                var patternMatches = pattern.test(currentUrl);
                 if (patternMatches) {
                   getCredentials(vaultServerAdress + '/v1/secret/data/vaultPass/' + secret + element).then((credentials) =>
-                    addCredentials(credentials.data.data, element, resultList))
+                    addCredentials(credentials.data.data, element, resultList));
                 }
-              })
+              });
             },
             error: function (data) {
-              console.error('ERROR accessing ' + secret + ': ' + JSON.stringify(data))
+              console.error('ERROR accessing ' + secret + ': ' + JSON.stringify(data));
             }
-          })
-        })
-      })
-    })
-  })
+          });
+        });
+      });
+    });
+  });
 }
 
 function addCredentials(credentials, credentialName, list) {
-  var item = document.createElement('li')
+  var item = document.createElement('li');
   item.addEventListener('click', function () {
-    fillCredentialsInBrowser(credentials.username, credentials.password)
-  })
-  item.appendChild(document.createTextNode(credentialName + ' - ' + JSON.stringify(credentials)))
-  list.appendChild(item)
+    fillCredentialsInBrowser(credentials.username, credentials.password);
+  });
+  item.appendChild(document.createTextNode(credentialName + ' - ' + JSON.stringify(credentials)));
+  list.appendChild(item);
 }
 
 async function getCredentials(urlPath) {
-  console.debug('Looking for credentials in ' + urlPath)
-  let result
+  console.debug('Looking for credentials in ' + urlPath);
+  let result;
 
   try {
     result = await jQuery.ajax({
@@ -87,23 +87,23 @@ async function getCredentials(urlPath) {
       headers: { 'X-Vault-Token': vaultToken },
       contentType: 'application/json',
       dataType: 'json'
-    })
-    return result
+    });
+    return result;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
 function fillCredentialsInBrowser(username, password) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     for (let tabIndex = 0; tabIndex < tabs.length; tabIndex++) {
-      var tab = tabs[tabIndex]
+      var tab = tabs[tabIndex];
       if (tab.url) {
-        currentUrl = tab.url
-        chrome.tabs.sendMessage(tab.id, { message: 'fill_creds', username: username, password: password }, function () { })
+        currentUrl = tab.url;
+        chrome.tabs.sendMessage(tab.id, { message: 'fill_creds', username: username, password: password }, function () { });
       }
     }
-  })
+  });
 }
 
-document.addEventListener('DOMContentLoaded', mainLoaded, false)
+document.addEventListener('DOMContentLoaded', mainLoaded, false);

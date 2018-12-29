@@ -5,24 +5,24 @@
 chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     if (request.message === 'fill_creds') {
-      var inputs = document.getElementsByTagName('input')
-      var passwordNode, usernameNode
+      var inputs = document.getElementsByTagName('input');
+      var passwordNode, usernameNode;
       for (let i = 0; i < inputs.length; i++) {
         if (inputs[i].type === 'password') {
-          passwordNode = inputs[i]
-          break
+          passwordNode = inputs[i];
+          break;
         }
       }
       if (passwordNode === null) {
-        console.error('Could not find passwordNode')
-        return
+        console.error('Could not find passwordNode');
+        return;
       }
 
       // Find the username field next to the password field
       for (let testNode = passwordNode.previousSibling; testNode !== null; testNode = testNode.previousSibling) {
         if (testNode && testNode.tagName && testNode.tagName === 'INPUT') {
-          usernameNode = testNode
-          break
+          usernameNode = testNode;
+          break;
         }
       }
 
@@ -30,14 +30,14 @@ chrome.runtime.onMessage.addListener(
       if (usernameNode !== null) {
         for (let form = passwordNode.parentElement; form !== null; form = form.parentElement) {
           if (form && form.tagName && form.tagName === 'FORM') {
-            let inputElements = form.getElementsByTagName('input')
+            let inputElements = form.getElementsByTagName('input');
             for (let i = 0; i < inputElements.length; i++) {
               if (inputElements[i].type === 'text' || inputElements[i].type === 'email') {
-                usernameNode = inputElements[i]
-                break
+                usernameNode = inputElements[i];
+                break;
               }
             }
-            break
+            break;
           }
         }
       }
@@ -45,19 +45,19 @@ chrome.runtime.onMessage.addListener(
       // Go completely crazy and wild guess any visible input field for the username
       // https://stackoverflow.com/a/21696585
       if (usernameNode !== null) {
-        let inputElements = document.getElementsByTagName('input')
+        let inputElements = document.getElementsByTagName('input');
         for (let i = 0; i < inputElements.length; i++) {
           if (inputElements[i].offsetParent && (inputElements[i].type === 'text' || inputElements[i].type === 'email')) {
-            usernameNode = inputElements[i]
-            break
+            usernameNode = inputElements[i];
+            break;
           }
         }
       }
 
       if (usernameNode !== null) {
-        usernameNode.value = request.username
-        passwordNode.value = request.password
+        usernameNode.value = request.username;
+        passwordNode.value = request.password;
       }
     }
   }
-)
+);
