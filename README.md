@@ -25,8 +25,7 @@ The path in this mount should be `/vaultPass/[someOrg]/url` where:
 ### TODO:
 * Create application specific Token instead of using the user-token
 * Nicer UI
-* Write (new) credentials to Vault
-* Remove synchronous GET request for credentials in popup.js
+* Write (new) credentials to Vault --> Out of scope
 
 ### Notes
-Tested with Vault 1.0.0
+Tested with Vault 1.0.0 and 1.0.1
