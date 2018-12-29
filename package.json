@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/zeichenanonym/vault-chrome-extension/issues"
   },
-  "homepage": "https://github.com/zeichenanonym/vault-chrome-extension#readme"
+  "homepage": "https://github.com/zeichenanonym/vault-chrome-extension#readme",
+  "devDependencies": {
+    "webextension-polyfill": "^0.3.1"
+  }
 }
