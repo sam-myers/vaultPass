@@ -56,10 +56,30 @@ async function mainLoaded() {
 
 function addCredentials(credentials, credentialName, list) {
   var item = document.createElement('li');
+  item.classList.add('mdl-list__item');
+  item.classList.add('mdl-list__item--three-line');
   item.addEventListener('click', function () {
     fillCredentialsInBrowser(credentials.username, credentials.password);
   });
-  item.appendChild(document.createTextNode(credentialName + ' - ' + JSON.stringify(credentials)));
+  var primaryContent = document.createElement('button');
+  item.appendChild(primaryContent);
+  primaryContent.classList.add('mdl-list__item-primary-content');
+  primaryContent.classList.add('mdl-button');
+  primaryContent.classList.add('mdl-js-button');
+  primaryContent.classList.add('mdl-button--raised');
+  primaryContent.classList.add('mdl-js-ripple-effect');
+  var titleContent = document.createElement('span');
+  primaryContent.appendChild(titleContent);
+  if (credentials.title) {
+    titleContent.innerHTML = credentials.title;
+  } else {
+    titleContent.innerHTML = credentialName;
+  }
+
+  var detailContent = document.createElement('span');
+  primaryContent.appendChild(detailContent);
+  detailContent.classList.add('mdl-list__item-text-body');
+  detailContent.innerHTML = `${credentials.username} - ${credentials.password}`;
   list.appendChild(item);
 }
 

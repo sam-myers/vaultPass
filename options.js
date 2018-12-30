@@ -8,10 +8,13 @@ async function mainLoaded() {
   var vaultServerAdress = (await browser.storage.sync.get('vaultAddress')).vaultAddress;
   if (vaultServerAdress) {
     vaultServer.value = vaultServerAdress;
+    vaultServer.parentNode.classList.add('is-dirty');
   }
   var username = (await browser.storage.sync.get('username')).username;
   if (username) {
     login.value = username;
+    login.parentNode.classList.add('is-dirty');
+
   }
   var vaultToken = (await browser.storage.local.get('vaultToken')).vaultToken;
   if (vaultToken) {
@@ -25,8 +28,8 @@ async function mainLoaded() {
 
 async function querySecrets(vaultServerAdress, vaultToken) {
   // Hide login prompt if we already have a Token
-  document.getElementById('login').style.visibility = 'hidden';
-  document.getElementById('logout').style.visibility = 'visible';
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('logout').style.display = 'block';
   var notify = document.getElementById('notify');
 
   var fetchListOfSecretDirs = await fetch(`${vaultServerAdress}/v1/secret/metadata/vaultPass`, {
@@ -44,17 +47,15 @@ async function querySecrets(vaultServerAdress, vaultToken) {
 }
 
 async function logout() {
-  document.getElementById('login').style.visibility = 'visible';
-  document.getElementById('logout').style.visibility = 'hidden';
+  document.getElementById('login').style.display = 'block';
+  document.getElementById('logout').style.display = 'none';
   document.getElementById('secretList').innerHTML = '';
   document.getElementById('notify').innerHTML = '';
   await browser.storage.local.set({ 'vaultToken': null });
 }
 
 async function displaySecrets(secrets) {
-  var secretList = document.getElementById('secretList');
-  secretList.appendChild(document.createTextNode('Available secret folders'));
-  var list = document.createElement('ul');
+  var list = document.getElementById('secretList');
   var activeSecrets = (await browser.storage.sync.get('secrets')).secrets;
   if (!activeSecrets) {
     activeSecrets = [];
@@ -63,6 +64,20 @@ async function displaySecrets(secrets) {
   for (const secret of secrets) {
     // Create the list item:
     var item = document.createElement('li');
+    item.classList.add('mdl-list__item');
+
+    var primaryContent = document.createElement('span');
+    primaryContent.classList.add('mdl-list__item-primary-content');
+    item.appendChild(primaryContent);
+    primaryContent.innerText = secret;
+
+    var secondaryContent = document.createElement('span');
+    secondaryContent.classList.add('mdl-list__item-secondary-action');
+    item.appendChild(secondaryContent);
+
+    var checkboxlabel = document.createElement('span');
+    checkboxlabel.classList.add('mdl-list__item-secondary-action');
+    secondaryContent.appendChild(checkboxlabel);
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -70,16 +85,12 @@ async function displaySecrets(secrets) {
     checkbox.name = secret;
     checkbox.checked = activeSecrets.indexOf(secret) > -1;
     checkbox.addEventListener('change', secretChanged);
-
-    item.appendChild(checkbox);
-    // Set its contents:
-    item.appendChild(document.createTextNode('  ' + secret));
+    checkboxlabel.appendChild(checkbox);
 
     // Add it to the list:
     list.appendChild(item);
   }
 
-  secretList.appendChild(list);
 }
 
 async function secretChanged() {
@@ -106,7 +117,7 @@ async function secretChanged() {
     if (!fetchListOfSecretsForDir.ok) {
       checkbox.checked = false;
       checkbox.disabled = true;
-      checkbox.parentElement.style = 'text-decoration:line-through; color: red;';
+      checkbox.parentElement.parentElement.parentElement.style = 'text-decoration:line-through; color: red;';
       throw new Error(`ERROR accessing this field: ${await fetchListOfSecretsForDir.text()}`);
     }
     if (activeSecrets.indexOf(checkbox.name) > -1) {
