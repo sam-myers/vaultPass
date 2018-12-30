@@ -109,7 +109,7 @@ async function secretChanged() {
       checkbox.parentElement.style = 'text-decoration:line-through; color: red;';
       throw new Error(`ERROR accessing this field: ${await fetchListOfSecretsForDir.text()}`);
     }
-    if (activeSecrets.indexOf(checkbox.name > -1)) {
+    if (activeSecrets.indexOf(checkbox.name) > -1) {
       activeSecrets.push(checkbox.name);
     }
     await browser.storage.sync.set({ 'secrets': activeSecrets });
