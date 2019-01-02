@@ -24,6 +24,15 @@ The path in this mount should be `/vaultPass/[someOrg]/url` where:
   * It should have _at least_ the keys `username` and `password` with the respective information
 * Get a Token via the options page of this extention
 
+## Example policies
+
+There are two short docs to get your started with access policies:
+
+* [KV version 1](docs/access_policies_v1.md)
+* [KV version 2](docs/access_policies_v2.md)
+
+If you just installed Vault - you propably have Version 2.
+
 ## TODO
 
 * Create application specific Token instead of using the user-token
