@@ -1,4 +1,4 @@
-# vault-chrome-extension
+# vaultPass
 
 A Chrome extension to leverage Hashicorp Vault as Credential Storage for teams
 
