@@ -1,8 +1,12 @@
 # vaultPass
 
-A Chrome extension to leverage Hashicorp Vault as Credential Storage for teams
+A Browser extension to leverage Hashicorp Vault as Credential Storage for teams
 
 A project started on a Hackathon @ ironSource by [Dimitry1987](https://github.com/Dmitry1987) and continued by [Chris Blum](https://github.com/zeichenanonym)
+
+**Get it:**
+[Chrome Store](https://chrome.google.com/webstore/detail/vaultpass/kbndeonibamcpiibocdhlagccdlmefco)
+[Firefox AMO](https://addons.mozilla.org/en-GB/firefox/addon/vaultpass/)
 
 ## Current features
 
