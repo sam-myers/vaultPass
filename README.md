@@ -48,6 +48,18 @@ If you just installed Vault - you propably have Version 2.
 
 Tested with Vault 1.0.x
 
+## Contribute
+
+If you contribute, please install the [pre-commit Hook](https://pre-commit.com/).
+If you have no idea what I am talking about - it's as easy as this:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+This will install the hook and will run [checks](.pre-commit-config.yaml) before you commit changes.
+
 ## Attributions
 
 Icon provided by [Material design icons](https://github.com/google/material-design-icons) by Google using [Android Asset Studio](https://romannurik.github.io/AndroidAssetStudio/index.html)
