@@ -46,7 +46,7 @@ If you just installed Vault - you propably have Version 2.
 
 ## Notes
 
-Tested with Vault 1.0.0 and 1.0.1
+Tested with Vault 1.0.x
 
 ## Attributions
 
