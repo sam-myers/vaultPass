@@ -42,6 +42,13 @@ async function mainLoaded() {
           'Content-Type': 'application/json'
         },
       });
+      if (!secretsInPath.ok) {
+        notify.error(
+          `Token is not able to read ${secret}... Try re-login`,
+          { removeOption: true }
+        );
+        return;
+      }
       let anyMatch = false;
       for (const element of (await secretsInPath.json()).data.keys) {
         var pattern = new RegExp(element);
