@@ -1,4 +1,4 @@
-/* global authButtonClick browser */
+/* global authButtonClick browser Notify */
 
 const notify = new Notify(document.querySelector('#notify'));
 async function mainLoaded() {
