@@ -13,6 +13,7 @@ A project started on a Hackathon @ ironSource by [Dimitry1987](https://github.co
 1. Connect to Vault and get Token
 2. Get list of potential credentials in Popup
 3. Select credentials from popup and have them filled into the website
+4. Copy username & password to the clipboard
 
 ## Requirements
 
@@ -40,7 +41,6 @@ If you just installed Vault - you propably have Version 2.
 ## TODO
 
 * Create application specific Token instead of using the user-token
-* Buttons to copy username & password to the clipboard
 * Write (new) credentials to Vault
   * Out of scope --> Do this directly in Vault for now
 
