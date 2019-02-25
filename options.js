@@ -18,7 +18,7 @@ async function mainLoaded() {
   }
   var vaultToken = (await browser.storage.local.get('vaultToken')).vaultToken;
   if (vaultToken) {
-    querySecrets(vaultServerAdress, vaultToken);
+    querySecrets(vaultServerAdress, vaultToken, null);
   }
 
   // put listener on login button
@@ -26,11 +26,14 @@ async function mainLoaded() {
   document.getElementById('logoutButton').addEventListener('click', logout, false);
 }
 
-async function querySecrets(vaultServerAdress, vaultToken) {
+async function querySecrets(vaultServerAdress, vaultToken, policies) {
   // Hide login prompt if we already have a Token
   document.getElementById('login').style.display = 'none';
   document.getElementById('logout').style.display = 'block';
   notify.clear();
+  if (policies) {
+    notify.info(`Attached policies: <br />${policies.join('<br />')}`, { removeOption: true });
+  }
 
   var fetchListOfSecretDirs = await fetch(`${vaultServerAdress}/v1/secret/metadata/vaultPass`, {
     method: 'LIST',
@@ -152,9 +155,10 @@ async function authToVault(vaultServer, username, password, authMount) {
     `);
     new Error(`authToVault: ${await loginToVault.text}`);
   }
-  const token = (await loginToVault.json()).auth.client_token;
+  const authinfo = (await loginToVault.json()).auth;
+  const token = authinfo.client_token;
   await browser.storage.local.set({ 'vaultToken': token });
-  querySecrets(vaultServer, token);
+  querySecrets(vaultServer, token, authinfo.policies);
   // TODO: Use user token to generate app token with 20h validity - then use THAT token
 
 }
