@@ -59,9 +59,3 @@ pre-commit install
 ```
 
 This will install the hook and will run [checks](.pre-commit-config.yaml) before you commit changes.
-
-## Attributions
-
-Icon provided by [Material design icons](https://github.com/google/material-design-icons) by Google using [Android Asset Studio](https://romannurik.github.io/AndroidAssetStudio/index.html)
-
-UI prettified using [Material Design Lite](https://getmdl.io/)
